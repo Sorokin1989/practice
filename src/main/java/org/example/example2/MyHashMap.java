@@ -41,12 +41,13 @@ public class MyHashMap<K, V> {
 
         while (element != null) {
 
-            if (Objects.equals(element.key, key)) {
-                element.value = value;
-                return;
-            } else {
-                element = element.next;
+            if (isKeysEquals(key, element.key)) {
+                    element.value = value;
+                    return;
+
             }
+            element = element.next;
+
         }
         table[index] = new Node<>(key, value, table[index]);
         size++;
@@ -66,8 +67,9 @@ public class MyHashMap<K, V> {
         Node<K, V> element = table[index];
 
         while (element != null) {
-            if (Objects.equals(element.key, key)) {
-                return element.value;
+
+            if (isKeysEquals(key, element.key)) {
+                    return element.value;
             }
             element = element.next;
         }
@@ -86,23 +88,34 @@ public class MyHashMap<K, V> {
         Node<K, V> element = table[index];
         Node<K, V> prev = null;
         while (element != null) {
-            if (Objects.equals(element.key, key)) {
 
-                if (prev != null) {
-                    prev.next = element.next;
+            if (isKeysEquals(key, element.key)) {
+
+                    if (prev != null) {
+                        prev.next = element.next;
+                        size--;
+                        return element.value;
+                    }
+                    table[index] = element.next;
                     size--;
                     return element.value;
-                }
-                table[index] = element.next;
-                size--;
-                return element.value;
+
+
 
 
             }
+
             prev = element;
             element = element.next;
         }
         return null;
+    }
+
+    private boolean isKeysEquals(K key1, K key2) {
+        if (key1==key2) return true;
+        if (key1==null || key2==null) return false;
+        if (key1.hashCode() != key2.hashCode()) return false;
+        return key1.equals(key2);
     }
 
     public int getSize() {
